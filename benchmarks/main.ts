@@ -36,8 +36,7 @@ function benchmarks() {
         });
 
         const markdownSummary =
-            `### Benchmark results:
-**Memory:**
+            `**Memory:**
 ${comparisonTable}`;
 
         const markdownText =
@@ -46,8 +45,8 @@ ${json.encode(memoryBaseline)}
 **PR:**
 ${json.encode(memoryResults)}`;
 
-        const jsonSummary = json.encode({ summary: markdownSummary, text: markdownText });
-        print(jsonSummary);
+        const jsonInfo = json.encode({ summary: markdownSummary, text: markdownText });
+        print(jsonInfo);
 
         // const summaryFile = io.open("benchmark_summary.json", "w")[0] as LuaFile
         // summaryFile.write(json.encode({ summary: markdownSummary, text: markdownText }));

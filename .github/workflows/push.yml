@@ -30,7 +30,24 @@ jobs:
         working-directory: benchmarks
       - name: Benchmark
         id: benchmark
-        run: echo ::set-output name=summary::`lua -- main.lua ../benchmark_baseline.json`
+        run: echo ::set-output name=info::`lua -- main.lua ../benchmark_baseline.json`
         working-directory: benchmarks/dist
-      - name: Benchmark Summary
-        run: echo "The time was ${{fromJson(steps.benchmark.outputs.summary).summary}}"
+      - name: Post check
+        uses: actions/github-script@0.9.0
+        with:
+          benchmark_info: ${{steps.benchmark.outputs.info}}
+          script: |
+            const benchmarkInfo = JSON.parse(core.getInput('benchmark_info', { required: true }));
+            gihub.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: "Benchmarks",
+              head_sha: context.sha,
+              status: "completed",
+              conclusion: "neutral",
+              output: {
+                title: "Benchmark Results",
+                summary: benchmarkInfo.summary,
+                text: benchmarkInfo.text
+              }
+            });
