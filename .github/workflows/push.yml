@@ -11,13 +11,13 @@ jobs:
       - uses: actions/setup-node@v1
       - run: npm ci
       - name: Lua Dependecies
-        run: apt install libreadline-dev
+        run: sudo apt-get install libreadline-dev
       - name: Lua Download
         run: curl -R -O http://www.lua.org/ftp/lua-5.3.5.tar.gz
       - name: Lua Extract
         run: tar -zxf lua-5.3.5.tar.gz
       - name: Lua Install
-        run: cd lua-5.3.5 && make linux test && make install
+        run: cd lua-5.3.5 && make linux test && sudo make install
       - name: Checkout
         uses: actions/checkout@v2
       - name: Download previous benchmark data
