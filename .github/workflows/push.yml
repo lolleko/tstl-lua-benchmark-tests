@@ -1,0 +1,24 @@
+on:
+  push:
+    branches:
+      - "*"
+jobs:
+  create_status_check_job:
+    runs-on: ubuntu-latest
+    name:
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - run: npm ci
+      - name: Download Lua
+        run: curl -R -O http://www.lua.org/ftp/lua-5.3.5.tar.gz
+      - name: Extract Lua
+        run: tar -zxf lua-5.3.5.tar.gz
+      - name: Install Lua
+        run: cd lua-5.3.5 && make linux test && make install
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Create Status Check
+        uses: ./.github/actions/benchmark
+      - name: Get the output time
+        run: echo "The time was ${{ steps.hello.outputs.time }}"
