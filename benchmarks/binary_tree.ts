@@ -11,22 +11,19 @@ export function binaryTreeBenchmark() {
 
     const stretchDepth = maxDepth + 1;
     const check = itemCheck(bottomUpTree(stretchDepth));
-    print(`stretch tree of depth ${stretchDepth}\t check: ${check}`);
 
     const longLivedTree = bottomUpTree(maxDepth);
 
     const tasks: Data[] = [];
     for (let depth = 4; depth <= maxDepth; depth += 2) {
         const iterations = 1 << maxDepth - depth + 4;
-        tasks.push({iterations, depth});
+        tasks.push({ iterations, depth });
     }
 
     const results = tasks.map(t => work(t.iterations, t.depth));
-    for (const result of results) {
-        print(result);
-    }
-
-    print(`long lived tree of depth ${maxDepth}\t check: ${itemCheck(longLivedTree)}`);
+    // for (const result of results) {
+    //     print(result);
+    // }
 }
 
 function work(iterations: number, depth: number): string {
@@ -38,7 +35,7 @@ function work(iterations: number, depth: number): string {
 }
 
 function cTreeNode(left?: TreeNode, right?: TreeNode): TreeNode {
-    return {left, right};
+    return { left, right };
 }
 
 function itemCheck(node: TreeNode): number {

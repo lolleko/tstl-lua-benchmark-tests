@@ -68,7 +68,7 @@ function Neptune(): NBody {
 }
 
 function Sun(): NBody {
-    return { x: 0.0, y: 0.0, z: 0.0, vx: 0.0, vy: 0.0, vz: 0.0, mass: SOLAR_MASS};
+    return { x: 0.0, y: 0.0, z: 0.0, vx: 0.0, vy: 0.0, vz: 0.0, mass: SOLAR_MASS };
 }
 
 const bodies = [Sun(), Jupiter(), Saturn(), Uranus(), Neptune()];
@@ -139,7 +139,7 @@ function energy(): number {
     for (let i = 0; i < size; i++) {
         const bodyi = bodies[i];
 
-        e += 0.5 * bodyi.mass * ( bodyi.vx * bodyi.vx + bodyi.vy * bodyi.vy + bodyi.vz * bodyi.vz );
+        e += 0.5 * bodyi.mass * (bodyi.vx * bodyi.vx + bodyi.vy * bodyi.vy + bodyi.vz * bodyi.vz);
 
         for (let j = i + 1; j < size; j++) {
             const bodyj = bodies[j];
@@ -159,9 +159,7 @@ export function nBodyBenchmark() {
 
     offsetMomentum();
 
-    print(energy());
     for (let i = 0; i < n; i++) {
         advance(0.01);
     }
-    print(energy());
 }

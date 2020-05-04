@@ -5,7 +5,6 @@ on:
 jobs:
   benchmark:
     runs-on: ubuntu-latest
-    name:
     steps:
       - name: Lua Dependecies
         run: sudo apt-get install libreadline-dev
@@ -21,14 +20,17 @@ jobs:
         with:
           node-version: 12.13.1
       - run: npm ci
-      - name: Download previous benchmark data
-        uses: actions/cache@v1
-        with:
-          path: ./benchmarks/benchmark_baseline.json
-          key: ${{ runner.os }}-benchmark
+      # - name: Download previous benchmark data
+      #   uses: actions/cache@v1
+      #   with:
+      #     path: ./benchmarks/benchmark_baseline.json
+      #     key: ${{ runner.os }}-benchmark
+      - name: Build Benchmark
+        run: npx typescript-to-lua -p tsconfig.json
+        working-directory: benchmarks
       - name: Benchmark
-        uses: ./.github/actions/benchmark
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Get the output time
-        run: echo "The time was ${{ steps.hello.outputs.time }}"
+        id: benchmark
+        run: echo ::set-output name=summary::`lua -- main.lua ../benchmark_baseline.json`
+        working-directory: benchmarks/dist
+      - name: Benchmark Summary
+        run: echo "The time was ${{fromJson(steps.benchmark.outputs.summary).summary}}"

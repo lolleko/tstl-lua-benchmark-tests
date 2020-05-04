@@ -1,4 +1,4 @@
-import { BenchmarkKind, MemoryBenchmarkResult } from "../benchmark_types";
+import { BenchmarkKind, MemoryBenchmarkResult } from "./benchmark_types";
 
 
 export function memoryBench(f: Function): MemoryBenchmarkResult {
