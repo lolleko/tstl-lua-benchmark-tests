@@ -1,7 +1,6 @@
 import * as core from "@actions/core";
 import * as exec from "@actions/exec";
 import * as github from "@actions/github";
-import * as path from "path";
 import * as fs from "fs";
 import * as table from "markdown-table";
 
@@ -36,18 +35,16 @@ async function run() {
       }
     });
 
-    const markdownResult =
+    const markdownSummary =
       `### Benchmark results:
 **Memory:**\n
-${table(comparisonTable)}
-<details><summary>Detailed results:</summary>
-**Baseline:**
+${table(comparisonTable)}`;
+
+    const markdownText =
+      `**Baseline:**
 ${JSON.stringify(memoryBaseline)}
 **PR:**
-${JSON.stringify(memoryResults)}
-</details>`;
-
-    console.log(markdownResult);
+${JSON.stringify(memoryResults)}`;
 
     const [
       gitHubRepoOwner,
@@ -66,9 +63,9 @@ ${JSON.stringify(memoryResults)}
       status: "completed",
       conclusion: "neutral",
       output: {
-        title: "Benchmakr Results",
-        summary: "Benchmark Results",
-        text: markdownResult
+        title: "Benchmark Results",
+        summary: markdownSummary,
+        text: markdownText
       }
     });
   } catch (error) {

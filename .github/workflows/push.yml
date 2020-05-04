@@ -3,7 +3,7 @@ on:
     branches:
       - "*"
 jobs:
-  create_status_check_job:
+  benchmark:
     runs-on: ubuntu-latest
     name:
     steps:
