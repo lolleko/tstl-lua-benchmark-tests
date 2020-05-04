@@ -6,13 +6,13 @@ jobs:
   benchmark:
     runs-on: ubuntu-latest
     steps:
-      - name: Lua Dependecies
+      - name: Lua dependecies
         run: sudo apt-get install libreadline-dev
-      - name: Lua Download
+      - name: Lua download
         run: curl -R -O http://www.lua.org/ftp/lua-5.3.5.tar.gz
-      - name: Lua Extract
+      - name: Lua extract
         run: tar -zxf lua-5.3.5.tar.gz
-      - name: Lua Install
+      - name: Lua install
         run: cd lua-5.3.5 && make linux test && sudo make install
       - name: Checkout
         uses: actions/checkout@v2
@@ -25,20 +25,20 @@ jobs:
       #   with:
       #     path: ./benchmarks/benchmark_baseline.json
       #     key: ${{ runner.os }}-benchmark
-      - name: Build Benchmark
+      - name: Build benchmark
         run: npx typescript-to-lua -p tsconfig.json
         working-directory: benchmarks
-      - name: Benchmark
+      - name: Run benchmark
         id: benchmark
         run: echo ::set-output name=info::`lua -- main.lua ../benchmark_baseline.json`
         working-directory: benchmarks/dist
-      - name: Post check
+      - name: Create benchmark check
         uses: actions/github-script@0.9.0
         with:
           benchmark_info: ${{steps.benchmark.outputs.info}}
           script: |
             const benchmarkInfo = JSON.parse(core.getInput('benchmark_info', { required: true }));
-            gihub.checks.create({
+            github.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: "Benchmarks",
