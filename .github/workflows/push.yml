@@ -41,12 +41,12 @@ jobs:
             github.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              name: "Benchmarks",
+              name: "Benchmark results",
               head_sha: context.sha,
               status: "completed",
               conclusion: "neutral",
               output: {
-                title: "Benchmark Results",
+                title: "Benchmark results",
                 summary: benchmarkInfo.summary,
                 text: benchmarkInfo.text
               }

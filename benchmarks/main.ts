@@ -10,14 +10,14 @@ declare var arg: any[];
 const memoryBenchmarkFunctions = [binaryTreeBenchmark, nBodyBenchmark];
 
 function benchmarks() {
-    const newResults = memoryBenchmarkFunctions.map(memoryBench);
-
     const baselineFile = io.open(arg[0], "rb")[0] as LuaFile;
     const baselineContent = baselineFile.read("a");
     baselineFile.close();
 
     if (baselineContent[0]) {
         const baselineResult = json.decode(baselineContent[0]) as BenchmarkResult[];
+
+        const newResults = memoryBenchmarkFunctions.map(memoryBench);
 
         const memoryBaseline = baselineResult.filter(isMemoryBenchmarkResult);
         const memoryResults = newResults.filter(isMemoryBenchmarkResult);
@@ -48,11 +48,8 @@ ${json.encode(memoryResults)}`;
         const jsonInfo = json.encode({ summary: markdownSummary, text: markdownText });
         print(jsonInfo);
 
-        // const summaryFile = io.open("benchmark_summary.json", "w")[0] as LuaFile
-        // summaryFile.write(json.encode({ summary: markdownSummary, text: markdownText }));
-
-        //const newBaselineFile = io.open(arg[0], "w")[0] as LuaFile
-        //newBaselineFile.write(encode(result));
+        const newBaselineFile = io.open(arg[0], "w")[0] as LuaFile
+        newBaselineFile.write(json.encode(newResults));
     }
 }
 
