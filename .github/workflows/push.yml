@@ -20,17 +20,17 @@ jobs:
         with:
           node-version: 12.13.1
       - run: npm ci
-      # - name: Download previous benchmark data
-      #   uses: actions/cache@v1
-      #   with:
-      #     path: ./benchmarks/benchmark_baseline.json
-      #     key: ${{ runner.os }}-benchmark
+      - name: Download previous benchmark data
+        uses: actions/cache@v1
+        with:
+          path: ./benchmarks/benchmark_master.json
+          key: ${{ runner.os }}-benchmark
       - name: Build benchmark
         run: npx typescript-to-lua -p tsconfig.json
         working-directory: benchmarks
       - name: Run benchmark
         id: benchmark
-        run: echo ::set-output name=info::`lua -- main.lua ../benchmark_baseline.json`
+        run: echo ::set-output name=info::`lua -- main.lua ../benchmark_master.json`
         working-directory: benchmarks/dist
       - name: Create benchmark check
         uses: actions/github-script@0.9.0

@@ -10,28 +10,29 @@ declare var arg: any[];
 const memoryBenchmarkFunctions = [binaryTreeBenchmark, nBodyBenchmark];
 
 function benchmarks() {
-    const baselineFile = io.open(arg[0], "rb")[0] as LuaFile;
-    const baselineContent = baselineFile.read("a");
-    baselineFile.close();
+    const masterFile = io.open(arg[0], "rb")[0] as LuaFile;
+    const masterContent = masterFile.read("a");
+    masterFile.close();
 
-    if (baselineContent[0]) {
-        const baselineResult = json.decode(baselineContent[0]) as BenchmarkResult[];
+    if (masterContent[0]) {
+        const masterResult = json.decode(masterContent[0]) as BenchmarkResult[];
 
         const newResults = memoryBenchmarkFunctions.map(memoryBench);
 
-        const memoryBaseline = baselineResult.filter(isMemoryBenchmarkResult);
-        const memoryResults = newResults.filter(isMemoryBenchmarkResult);
+        const memoryMasterResult = masterResult.filter(isMemoryBenchmarkResult);
+        const memoryNewResult = newResults.filter(isMemoryBenchmarkResult);
 
-        let comparisonTable = "| Name | Baseline (kb) | Commit (kb) | Change (%) |\n|-|-|-|-|\n";
+        let comparisonTable = "| name | master (kb) | commit (kb) | change (%) |\n|-|-|-|-|\n";
 
-        // we iteerate by the new benchmark in case benchmarks have been added
-        memoryResults.forEach(result => {
-            const baseline = memoryBaseline.find(r => r.benchmarkName == result.benchmarkName);
-            if (baseline) {
-                const percentageChange = 100 - baseline.memoryUsedForExec / result.memoryUsedForExec * 100;
-                comparisonTable += `| ${result.benchmarkName} | ${baseline.memoryUsedForExec} | ${result.memoryUsedForExec} | ${percentageChange} |\n`;
+        // we iterate by the new benchmark in case benchmarks have been added
+        memoryNewResult.forEach(newResult => {
+            const master = memoryMasterResult.find(r => r.benchmarkName == newResult.benchmarkName);
+            if (master) {
+                const percentageChange = 100 - master.memoryUsedForExec / newResult.memoryUsedForExec * 100;
+                comparisonTable += `| ${newResult.benchmarkName} | ${master.memoryUsedForExec} | ${newResult.memoryUsedForExec} | ${percentageChange} |\n`;
             } else {
-                print(`No Baseline found for ${result.benchmarkName} maybe it's a new benchmark?`);
+                // No master found => new benchmark
+                comparisonTable += `| ${newResult.benchmarkName}(new) | / | / | / |\n`;
             }
         });
 
@@ -40,16 +41,16 @@ function benchmarks() {
 ${comparisonTable}`;
 
         const markdownText =
-            `**Baseline:**
-${json.encode(memoryBaseline)}
-**PR:**
-${json.encode(memoryResults)}`;
+            `**master:**
+${json.encode(memoryMasterResult)}
+**commit:**
+${json.encode(memoryNewResult)}`;
 
         const jsonInfo = json.encode({ summary: markdownSummary, text: markdownText });
         print(jsonInfo);
 
-        const newBaselineFile = io.open(arg[0], "w")[0] as LuaFile
-        newBaselineFile.write(json.encode(newResults));
+        const newMasterFile = io.open(arg[0], "w")[0] as LuaFile
+        newMasterFile.write(json.encode(newResults));
     }
 }
 
