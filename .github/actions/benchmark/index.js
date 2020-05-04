@@ -44,7 +44,7 @@ var table = require("markdown-table");
 var benchmark_types_1 = require("./benchmark_types");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var baseline, results, memoryBaseline_1, memoryResults, comparisonTable_1, markdownResult, _a, gitHubRepoOwner, gitHubRepoName, gitHubSha, gitHubToken, octokit, error_1;
+        var baseline, results, memoryBaseline_1, memoryResults, comparisonTable_1, markdownSummary, markdownText, _a, gitHubRepoOwner, gitHubRepoName, gitHubSha, gitHubToken, octokit, error_1;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -75,8 +75,8 @@ function run() {
                             console.log("No Baseline found for " + result.benchmarkName + " maybe it's a new benchmark?");
                         }
                     });
-                    markdownResult = "### Benchmark results:\n**Memory:**\n\n" + table(comparisonTable_1) + "\n<details><summary>Detailed results:</summary>\n**Baseline:**\n" + JSON.stringify(memoryBaseline_1) + "\n**PR:**\n" + JSON.stringify(memoryResults) + "\n</details>";
-                    console.log(markdownResult);
+                    markdownSummary = "### Benchmark results:\n**Memory:**\n\n" + table(comparisonTable_1);
+                    markdownText = "**Baseline:**\n" + JSON.stringify(memoryBaseline_1) + "\n**PR:**\n" + JSON.stringify(memoryResults);
                     _a = process.env.GITHUB_REPOSITORY.split("/"), gitHubRepoOwner = _a[0], gitHubRepoName = _a[1];
                     gitHubSha = process.env.GITHUB_SHA;
                     gitHubToken = core.getInput("github-token");
@@ -89,9 +89,9 @@ function run() {
                         status: "completed",
                         conclusion: "neutral",
                         output: {
-                            title: "Benchmakr Results",
-                            summary: "Benchmark Results",
-                            text: markdownResult
+                            title: "Benchmark Results",
+                            summary: markdownSummary,
+                            text: markdownText
                         }
                     });
                     return [3 /*break*/, 4];
