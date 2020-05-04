@@ -10,11 +10,13 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
       - run: npm ci
-      - name: Download Lua
+      - name: Lua Dependecies
+        run: apt install libreadline-dev
+      - name: Lua Download
         run: curl -R -O http://www.lua.org/ftp/lua-5.3.5.tar.gz
-      - name: Extract Lua
+      - name: Lua Extract
         run: tar -zxf lua-5.3.5.tar.gz
-      - name: Install Lua
+      - name: Lua Install
         run: cd lua-5.3.5 && make linux test && make install
       - name: Checkout
         uses: actions/checkout@v2
