@@ -49,28 +49,28 @@ ${JSON.stringify(memoryResults)}
 
     console.log(markdownResult);
 
-    // const [
-    //   gitHubRepoOwner,
-    //   gitHubRepoName
-    // ] = (process.env.GITHUB_REPOSITORY as string).split("/");
-    // const gitHubSha = process.env.GITHUB_SHA as string;
-    // const gitHubToken = core.getInput("github-token");
+    const [
+      gitHubRepoOwner,
+      gitHubRepoName
+    ] = (process.env.GITHUB_REPOSITORY as string).split("/");
+    const gitHubSha = process.env.GITHUB_SHA as string;
+    const gitHubToken = core.getInput("github-token");
 
-    // const octokit = new github.GitHub(gitHubToken);
+    const octokit = new github.GitHub(gitHubToken);
 
-    // octokit.checks.create({
-    //   owner: gitHubRepoOwner,
-    //   repo: gitHubRepoName,
-    //   name: "Check Created by API",
-    //   head_sha: gitHubSha,
-    //   status: "completed",
-    //   conclusion: "neutral",
-    //   output: {
-    //     title: "Benchmakr Results",
-    //     summary: "Benchmark Results",
-    //     text: markdownResult
-    //   }
-    // });
+    octokit.checks.create({
+      owner: gitHubRepoOwner,
+      repo: gitHubRepoName,
+      name: "Check Created by API",
+      head_sha: gitHubSha,
+      status: "completed",
+      conclusion: "neutral",
+      output: {
+        title: "Benchmakr Results",
+        summary: "Benchmark Results",
+        text: markdownResult
+      }
+    });
   } catch (error) {
     core.setFailed(error.message);
   }

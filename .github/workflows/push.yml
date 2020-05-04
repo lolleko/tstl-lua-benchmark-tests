@@ -18,7 +18,12 @@ jobs:
         run: cd lua-5.3.5 && make linux test && make install
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Create Status Check
+      - name: Download previous benchmark data
+        uses: actions/cache@v1
+        with:
+          path: ./benchmarks/benchmark_baseline.json
+          key: ${{ runner.os }}-benchmark
+      - name: Benchmark
         uses: ./.github/actions/benchmark
       - name: Get the output time
         run: echo "The time was ${{ steps.hello.outputs.time }}"
