@@ -24,23 +24,23 @@ jobs:
           path: ./benchmark/data
           key: ${{ runner.os }}-master-benchmark-${{ github.sha }}
           restore-keys: ${{ runner.os }}-master-benchmark-
-      - name: ensure benchmark data dir exists
+      - name: Ensure benchmark data dir exists
         run: mkdir -p ./benchmark/data
-      - name: build benchmark Lua 5.3
+      - name: Build benchmark Lua 5.3
         run: npx typescript-to-lua -p tsconfig.53.json
         working-directory: benchmark
-      - name: benchmark Lua 5.3
+      - name: Run benchmark Lua 5.3
         id: benchmark-lua
         run: echo ::set-output name=info::`lua5.3 -- run.lua ../data/benchmark_master_53.json ${{github.ref}}`
         working-directory: benchmark/dist
-      - name: build benchmark LuaJIT
+      - name: Build benchmark LuaJIT
         run: npx typescript-to-lua -p tsconfig.jit.json
         working-directory: benchmark
-      - name: benchmark LuaJIT
+      - name: Run benchmark LuaJIT
         id: benchmark-jit
         run: echo ::set-output name=info::`luajit -- run.lua ../data/benchmark_master_jit.json ${{github.ref}}`
         working-directory: benchmark/dist
-      - name: create benchmark check
+      - name: Create benchmark check
         uses: actions/github-script@0.9.0
         with:
           benchmark-info-lua: ${{steps.benchmark-lua.outputs.info}}

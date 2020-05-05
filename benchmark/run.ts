@@ -1,6 +1,7 @@
 import { memoryBenchmark, compareMemoryBenchmarks } from "./memory_benchmark";
-import { isMemoryBenchmarkResult, BenchmarkResult, json } from "./benchmark_types";
+import { isMemoryBenchmarkResult, BenchmarkResult } from "./benchmark_types";
 import detectCyleBenchmark from "./memory_benchmarks/graph_cylce";
+import { json } from "./util";
 
 // CLI arguments
 // arg[0]: path to baseline benchmark data (required because this is also the output path)
@@ -36,8 +37,8 @@ function benchmark() {
         // Output benchmark information to stdout
         print(jsonInfo);
     } else {
-        // No master just write the current results to disk and output empty info
-        print(json.encode({ summary: "new benchmark: no results yet", text: "" }))
+        // No master yet, just write the current results to disk and output empty info
+        print(json.encode({ summary: "new benchmark (no results yet)", text: "" }))
     }
 
     // Only update baseline if we are on master branch

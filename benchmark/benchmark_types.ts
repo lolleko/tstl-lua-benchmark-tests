@@ -18,5 +18,3 @@ export interface MemoryBenchmarkResult extends BenchmarkResult {
 export function isMemoryBenchmarkResult(result: BenchmarkResult): result is MemoryBenchmarkResult {
     return result.kind == BenchmarkKind.Memory;
 }
-
-export const json: { decode: (this: void, str: string) => {}, encode: (this: void, val: any) => string } = require("json");

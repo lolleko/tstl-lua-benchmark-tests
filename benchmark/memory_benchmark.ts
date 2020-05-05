@@ -1,8 +1,8 @@
-import { BenchmarkKind, MemoryBenchmarkResult, json } from "./benchmark_types";
-import { round } from "./util";
+import { BenchmarkKind, MemoryBenchmarkResult } from "./benchmark_types";
+import { round, json } from "./util";
 
 
-export function memoryBenchmark(benchmarkFunction: Function): MemoryBenchmarkResult {
+export function runMemoryBenchmark(benchmarkFunction: Function): MemoryBenchmarkResult {
     let result: MemoryBenchmarkResult = { kind: BenchmarkKind.Memory, benchmarkName: "NO_NAME", preExecMemoryUsage: 0, postExecMemoryUsage: 0, memoryUsedForExec: 0, memoryAfterGC: 0 };
 
     collectgarbage('stop')
