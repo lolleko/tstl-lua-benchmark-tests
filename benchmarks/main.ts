@@ -15,7 +15,7 @@ function benchmarks() {
     const masterFileOpen = io.open(arg[0], "rb");
 
     if (masterFileOpen && masterFileOpen[0]) {
-        const masterFile = masterFileOpen[0] as LuaFile;
+        const masterFile = masterFileOpen[0];
 
         let masterContent: (string | undefined)[];
         if (_VERSION == "Lua 5.3") {
@@ -59,6 +59,8 @@ function benchmarks() {
             print(json.encode({ summary: "New benchmark: no results yet", text: "" }))
         }
     }
+
+    io.
 
     const newMasterFile = io.open(arg[0], "w+")[0] as LuaFile
     newMasterFile.write(json.encode(newResults));
