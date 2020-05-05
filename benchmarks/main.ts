@@ -11,7 +11,7 @@ const memoryBenchmarkFunctions = [binaryTreeBenchmark, nBodyBenchmark];
 
 function benchmarks() {
     const masterFile = io.open(arg[0], "rb")[0] as LuaFile;
-    let masterContent;
+    let masterContent: (string | undefined)[];
     if (_VERSION == "Lua 5.3") {
         // @ts-ignore
         masterContent = masterFile.read("a");
@@ -56,7 +56,7 @@ ${json.encode(memoryNewResult)}`;
         const jsonInfo = json.encode({ summary: markdownSummary, text: markdownText });
         print(jsonInfo);
 
-        const newMasterFile = io.open(arg[0], "w")[0] as LuaFile
+        const newMasterFile = io.open(arg[0], "w+")[0] as LuaFile
         newMasterFile.write(json.encode(newResults));
     }
 }
