@@ -39,7 +39,7 @@ function benchmarks() {
             memoryNewResult.forEach(newResult => {
                 const master = memoryMasterResult.find(r => r.benchmarkName == newResult.benchmarkName);
                 if (master) {
-                    const percentageChange = 100 - master.memoryUsedForExec / newResult.memoryUsedForExec * 100;
+                    const percentageChange = newResult.memoryUsedForExec / master.memoryUsedForExec * 100 - 100;
                     comparisonTable += `| ${newResult.benchmarkName} | ${master.memoryUsedForExec} | ${newResult.memoryUsedForExec} | ${percentageChange} |\n`;
                 } else {
                     // No master found => new benchmark
