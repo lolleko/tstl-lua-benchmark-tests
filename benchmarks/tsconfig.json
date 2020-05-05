@@ -6,7 +6,7 @@
         ],
         // Dev types are JIT
         "types": [
-            "lua-types/JIT"
+            "lua-types/jit"
         ],
         "moduleResolution": "node",
         "strict": true,
