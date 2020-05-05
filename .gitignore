@@ -1,8 +1,9 @@
 node_modules
-benchmarks/dist/*
-!benchmarks/dist/json.lua
+
+benchmark/dist/*
+!benchmark/dist/json.lua
+
 yarn.lock
 .vscode
 .idea
 .DS_Store
-

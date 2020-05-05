@@ -1,0 +1,1 @@
+[{"benchmarkName":"./memory_benchmarks/graph_cylce.lua","memoryAfterGC":154.9619140625,"memoryUsedForExec":334585.234375,"postExecMemoryUsage":334769.15136719,"preExecMemoryUsage":183.9169921875,"kind":"memory"}]

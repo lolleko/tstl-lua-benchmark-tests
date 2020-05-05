@@ -1,13 +1,13 @@
-import { BenchmarkKind, MemoryBenchmarkResult, json, MemoryBenchmarkInput } from "./benchmark_types";
+import { BenchmarkKind, MemoryBenchmarkResult, json } from "./benchmark_types";
 
 
-export function memoryBenchmark(input: MemoryBenchmarkInput): MemoryBenchmarkResult {
+export function memoryBenchmark(benchmarkFunction: Function): MemoryBenchmarkResult {
     let result: MemoryBenchmarkResult = { kind: BenchmarkKind.Memory, benchmarkName: "NO_NAME", preExecMemoryUsage: 0, postExecMemoryUsage: 0, memoryUsedForExec: 0, memoryAfterGC: 0 };
 
     collectgarbage('stop')
     result.preExecMemoryUsage = collectgarbage("count");
 
-    input.fn(input.n);
+    benchmarkFunction();
 
     result.postExecMemoryUsage = collectgarbage("count");
     result.memoryUsedForExec = result.postExecMemoryUsage - result.preExecMemoryUsage;
@@ -17,7 +17,7 @@ export function memoryBenchmark(input: MemoryBenchmarkInput): MemoryBenchmarkRes
 
     result.memoryAfterGC = collectgarbage("count");
 
-    result.benchmarkName = debug.getinfo(f).short_src;
+    result.benchmarkName = debug.getinfo(benchmarkFunction).short_src;
 
     return result;
 }

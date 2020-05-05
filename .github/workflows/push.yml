@@ -60,7 +60,7 @@ jobs:
               status: "completed",
               conclusion: "neutral",
               output: {
-                title: "Benchmark results",
+                title: "benchmark results",
                 summary: summary,
                 text: text
               }
