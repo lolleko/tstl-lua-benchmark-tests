@@ -41,7 +41,7 @@ jobs:
       - name: Restore original benchmark data
         # only restore if pull request
         if: ${{ github.base_ref }}
-        run: rm -r ./benchmarks/data && mv -r ./benchmarks/data_original .benchmarks/data && ls
+        run: rm -r ./benchmarks/data && mv ./benchmarks/data_original .benchmarks/data && ls
       - name: Create benchmark check
         uses: actions/github-script@0.9.0
         with:
