@@ -33,8 +33,6 @@ jobs:
         id: benchmark-jit
         run: echo ::set-output name=info::`luajit -- main.lua ../benchmark_master.json`
         working-directory: benchmarks/dist
-      - name: Benchmark Summary
-        run: echo "The time was ${{fromJson(steps.benchmark-lua.outputs.info).summary}}"
       - name: Create benchmark check
         uses: actions/github-script@0.9.0
         with:
@@ -58,6 +56,6 @@ jobs:
               output: {
                 title: "Benchmark results",
                 summary: summary,
-                text: benchmarkInfo.text
+                text: text
               }
             });
