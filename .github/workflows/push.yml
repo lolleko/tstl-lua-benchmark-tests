@@ -4,6 +4,7 @@ on:
       - "*"
 jobs:
   benchmark:
+    name: Benchmark
     runs-on: ubuntu-latest
     steps:
       - name: Lua Install
@@ -56,12 +57,12 @@ jobs:
             github.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              name: "benchmark results",
+              name: "Benchmark results",
               head_sha: context.sha,
               status: "completed",
               conclusion: "neutral",
               output: {
-                title: "benchmark results",
+                title: "Benchmark results",
                 summary: summary,
                 text: text
               }
