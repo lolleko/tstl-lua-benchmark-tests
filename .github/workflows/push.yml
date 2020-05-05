@@ -19,13 +19,16 @@ jobs:
         with:
           path: ./benchmarks/benchmark_master.json
           key: ${{ runner.os }}-benchmark
-      - name: Build benchmark
-        run: npx typescript-to-lua -p tsconfig.json
+      - name: Build benchmark Lua 5.3
+        run: npx typescript-to-lua -p tsconfig.53.json
         working-directory: benchmarks
-      - name: Run benchmark Lua
+      - name: Run benchmark Lua 5.3
         id: benchmark-lua
         run: echo ::set-output name=info::`lua -- main.lua ../benchmark_master.json`
         working-directory: benchmarks/dist
+      - name: Build benchmark LuaJIT
+        run: npx typescript-to-lua -p tsconfig.JIT.json
+        working-directory: benchmarks
       - name: Run benchmark LuaJIT
         id: benchmark-jit
         run: echo ::set-output name=info::`luajit -- main.lua ../benchmark_master.json`
@@ -33,11 +36,11 @@ jobs:
       - name: Create benchmark check
         uses: actions/github-script@0.9.0
         with:
-          benchmark_info_lua: ${{steps.benchmark-lua.outputs.info}}
-          benchmark_info_jit: ${{steps.benchmark-jit.outputs.info}}
+          benchmark-info-lua: ${{steps.benchmark-lua.outputs.info}}
+          benchmark-info-jit: ${{steps.benchmark-jit.outputs.info}}
           script: |
-            const benchmarkInfoLua = JSON.parse(core.getInput('benchmark_info_lua', { required: true }));
-            const benchmarkInfoJIT = JSON.parse(core.getInput('benchmark_info_jit', { required: true }));
+            const benchmarkInfoLua = JSON.parse(core.getInput('benchmark-info-lua', { required: true }));
+            const benchmarkInfoJIT = JSON.parse(core.getInput('benchmark-info-jit', { required: true }));
 
             const summary = `### Lua5.3\n${benchmarkInfoLua.summary}\n### LuaJIT\n${benchmarkInfoJIT.summary}`;
 

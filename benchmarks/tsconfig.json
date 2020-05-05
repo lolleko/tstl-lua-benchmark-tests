@@ -4,14 +4,12 @@
         "lib": [
             "esnext"
         ],
-        "moduleResolution": "node",
+        // Dev types are JIT
         "types": [
-            "lua-types/5.3"
+            "lua-types/JIT"
         ],
+        "moduleResolution": "node",
         "strict": true,
         "outDir": "dist"
-    },
-    "tstl": {
-        "luaTarget": "5.3"
     }
 }

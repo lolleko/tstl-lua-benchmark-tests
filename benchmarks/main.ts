@@ -11,7 +11,14 @@ const memoryBenchmarkFunctions = [binaryTreeBenchmark, nBodyBenchmark];
 
 function benchmarks() {
     const masterFile = io.open(arg[0], "rb")[0] as LuaFile;
-    const masterContent = masterFile.read("a");
+    let masterContent;
+    if (_VERSION == "Lua 5.3") {
+        // @ts-ignore
+        masterContent = masterFile.read("a");
+    } else {
+        // @ts-ignore
+        masterContent = masterFile.read("*a");
+    }
     masterFile.close();
 
     if (masterContent[0]) {
