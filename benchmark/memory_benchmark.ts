@@ -33,7 +33,7 @@ export function compareMemoryBenchmarks(oldResults: MemoryBenchmarkResult[], upd
             comparisonTable += `| ${newResult.benchmarkName} | ${master.memoryUsedForExec} | ${newResult.memoryUsedForExec} | ${percentageChange} |\n`;
         } else {
             // No master found => new benchmark
-            comparisonTable += `| ${newResult.benchmarkName}(new) | / | / | / |\n`;
+            comparisonTable += `| ${newResult.benchmarkName}(new) | / | ${newResult.memoryUsedForExec} | / |\n`;
         }
     });
 
