@@ -54,10 +54,10 @@ function benchmarks() {
 
             const jsonInfo = json.encode({ summary: markdownSummary, text: markdownText });
             print(jsonInfo);
-        } else {
-            // No master just write the current results an empty info
-            print(json.encode({ summary: "New benchmark: no results yet", text: "" }))
         }
+    } else {
+        // No master just write the current results and empty info
+        print(json.encode({ summary: "New benchmark: no results yet", text: "" }))
     }
 
     const newMasterFile = io.open(arg[0], "w+")[0] as LuaFile
