@@ -23,7 +23,7 @@ jobs:
       - name: Save Original Benchmark
         # only save if pull request
         if: ${{ github.base_ref }}
-        run: cp -r ./benchmarks/data .bencharks/data_original && ls
+        run: cp -r ./benchmarks/data .benchmarks/data_original && ls
       - name: Build benchmark Lua 5.3
         run: npx typescript-to-lua -p tsconfig.53.json
         working-directory: benchmarks
@@ -41,7 +41,7 @@ jobs:
       - name: Restore original benchmark data
         # only restore if pull request
         if: ${{ github.base_ref }}
-        run: rm -r ./benchmarks/data && mv -r ./benchmarks/data_original .bencharks/data && ls
+        run: rm -r ./benchmarks/data && mv -r ./benchmarks/data_original .benchmarks/data && ls
       - name: Create benchmark check
         uses: actions/github-script@0.9.0
         with:
