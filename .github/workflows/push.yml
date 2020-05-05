@@ -18,10 +18,10 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ./benchmarks/data
-          key: ${{ runner.os }}-master-benchmark
-          restore-keys: ${{ runner.os }}-master-benchmark
+          key: ${{ runner.os }}-master-benchmark-github.ref
       - name: Save Original Benchmark
         # only save if pull request
+        # this is required so we only cache the new benchmark data if we are on master
         if: ${{ github.base_ref }}
         run: cp -r ./benchmarks/data .benchmarks/data_original && ls
       - name: Build benchmark Lua 5.3
@@ -40,6 +40,7 @@ jobs:
         working-directory: benchmarks/dist
       - name: Restore original benchmark data
         # only restore if pull request
+        # this is required so we only cache the new benchmark data if we are on master
         if: ${{ github.base_ref }}
         run: rm -r ./benchmarks/data && mv ./benchmarks/data_original .benchmarks/data && ls
       - name: Create benchmark check
