@@ -24,9 +24,9 @@ jobs:
         if: steps.cache-benchmark.outputs.cache-hit != 'true'
         run: mkdir -p ./benchmarks/data
       - name: Save Original Benchmark
-        # only save if pull request
+        # only save if pull request and data present
         # this is required so we only cache the new benchmark data if we are on master
-        if: ${{ github.base_ref }}
+        if: ${{ github.base_ref && steps.cache-benchmark.outputs.cache-hit == 'true'}}
         run: cp -r ./benchmarks/data .benchmarks/data_original && ls
       - name: Build benchmark Lua 5.3
         run: npx typescript-to-lua -p tsconfig.53.json
@@ -45,7 +45,7 @@ jobs:
       - name: Restore original benchmark data
         # only restore if pull request
         # this is required so we only cache the new benchmark data if we are on master
-        if: ${{ github.base_ref }}
+        if: ${{ github.base_ref && steps.cache-benchmark.outputs.cache-hit == 'true'}}
         run: rm -r ./benchmarks/data && mv ./benchmarks/data_original .benchmarks/data && ls
       - name: Create benchmark check
         uses: actions/github-script@0.9.0
