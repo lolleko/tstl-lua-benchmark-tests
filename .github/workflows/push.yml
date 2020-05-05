@@ -21,33 +21,22 @@ jobs:
           path: ./benchmarks/data
           key: ${{ runner.os }}-master-benchmark-${{ github.sha }}
           restore-keys: ${{ runner.os }}-master-benchmark-
-      - name: Create benchmark data dir on cache miss
-        if: steps.cache-benchmark.outputs.cache-hit != 'true'
+      - name: Ensure benchmark data dir exists
         run: mkdir -p ./benchmarks/data
-      - name: Save Original Benchmark
-        # only save if pull request and data present
-        # this is required so we only cache the new benchmark data if we are on master
-        if: ${{ github.base_ref && steps.cache-benchmark.outputs.cache-hit == 'true'}}
-        run: cp -r ./benchmarks/data .benchmarks/data_original && ls
       - name: Build benchmark Lua 5.3
         run: npx typescript-to-lua -p tsconfig.53.json
         working-directory: benchmarks
       - name: Run benchmark Lua 5.3
         id: benchmark-lua
-        run: echo ::set-output name=info::`lua5.3 -- main.lua ../data/benchmark_master_53.json`
+        run: echo ::set-output name=info::`lua5.3 -- main.lua ../data/benchmark_master_53.json ${{gihub.ref}}`
         working-directory: benchmarks/dist
       - name: Build benchmark LuaJIT
         run: npx typescript-to-lua -p tsconfig.jit.json
         working-directory: benchmarks
       - name: Run benchmark LuaJIT
         id: benchmark-jit
-        run: echo ::set-output name=info::`luajit -- main.lua ../data/benchmark_master_jit.json`
+        run: echo ::set-output name=info::`luajit -- main.lua ../data/benchmark_master_jit.json ${{gihub.ref}}`
         working-directory: benchmarks/dist
-      - name: Restore original benchmark data
-        # only restore if pull request
-        # this is required so we only cache the new benchmark data if we are on master
-        if: ${{ github.base_ref && steps.cache-benchmark.outputs.cache-hit == 'true'}}
-        run: rm -r ./benchmarks/data && mv ./benchmarks/data_original .benchmarks/data && ls
       - name: Create benchmark check
         uses: actions/github-script@0.9.0
         with:

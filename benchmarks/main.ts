@@ -60,8 +60,11 @@ function benchmarks() {
         print(json.encode({ summary: "New benchmark: no results yet", text: "" }))
     }
 
-    const newMasterFile = io.open(arg[0], "w+")[0] as LuaFile
-    newMasterFile.write(json.encode(newResults));
+    // Only update baseline if we are on master
+    if (string.find(arg[1], "master")[0]) {
+        const newMasterFile = io.open(arg[0], "w+")[0] as LuaFile
+        newMasterFile.write(json.encode(newResults));
+    }
 }
 
 benchmarks();
