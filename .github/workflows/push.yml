@@ -8,12 +8,13 @@ jobs:
     steps:
       - name: Lua Install
         run: sudo apt-get install lua5.3 luajit
-      - name: Checkout
-        uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12.13.1
+        uses: actions/setup-node@v1
         with:
           node-version: 12.13.1
       - run: npm ci
+      # - run: npm run build
       # This will never result in a direct cache hit.
       # Teherefore this always update the benchmark data.
       - name: Cache benchmark data
@@ -23,23 +24,23 @@ jobs:
           path: ./benchmark/data
           key: ${{ runner.os }}-master-benchmark-${{ github.sha }}
           restore-keys: ${{ runner.os }}-master-benchmark-
-      - name: Ensure benchmark data dir exists
+      - name: ensure benchmark data dir exists
         run: mkdir -p ./benchmark/data
-      - name: Build benchmark Lua 5.3
+      - name: build benchmark Lua 5.3
         run: npx typescript-to-lua -p tsconfig.53.json
         working-directory: benchmark
-      - name: Run benchmark Lua 5.3
+      - name: benchmark Lua 5.3
         id: benchmark-lua
         run: echo ::set-output name=info::`lua5.3 -- run.lua ../data/benchmark_master_53.json ${{github.ref}}`
         working-directory: benchmark/dist
-      - name: Build benchmark LuaJIT
+      - name: build benchmark LuaJIT
         run: npx typescript-to-lua -p tsconfig.jit.json
         working-directory: benchmark
-      - name: Run benchmark LuaJIT
+      - name: benchmark LuaJIT
         id: benchmark-jit
         run: echo ::set-output name=info::`luajit -- run.lua ../data/benchmark_master_jit.json ${{github.ref}}`
         working-directory: benchmark/dist
-      - name: Create benchmark check
+      - name: create benchmark check
         uses: actions/github-script@0.9.0
         with:
           benchmark-info-lua: ${{steps.benchmark-lua.outputs.info}}
