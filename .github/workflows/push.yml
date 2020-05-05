@@ -19,7 +19,8 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ./benchmarks/data
-          key: ${{ runner.os }}-master-benchmark-${{ github.ref }}
+          key: ${{ runner.os }}-master-benchmark-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-master-benchmark-
       - name: Create benchmark data dir on cache miss
         if: steps.cache-benchmark.outputs.cache-hit != 'true'
         run: mkdir -p ./benchmarks/data
