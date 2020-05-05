@@ -6,20 +6,10 @@ jobs:
   benchmark:
     runs-on: ubuntu-latest
     steps:
-      - name: Lua dependecies
-        run: sudo apt-get install libreadline-dev
-      - name: Lua download
-        run: curl -R -O http://www.lua.org/ftp/lua-5.3.5.tar.gz
-      - name: Lua extract
-        run: tar -zxf lua-5.3.5.tar.gz
-      - name: Lua install
-        run: cd lua-5.3.5 && make linux test && sudo make install
+      - name: Lua Install
+        run: sudo apt-get install lua5.3 luajit
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12.13.1
-      - run: npm ci
       - name: Download previous benchmark data
         uses: actions/cache@v1
         with:
@@ -28,16 +18,27 @@ jobs:
       - name: Build benchmark
         run: npx typescript-to-lua -p tsconfig.json
         working-directory: benchmarks
-      - name: Run benchmark
-        id: benchmark
+      - name: Run benchmark Lua
+        id: benchmark-lua
         run: echo ::set-output name=info::`lua -- main.lua ../benchmark_master.json`
+        working-directory: benchmarks/dist
+      - name: Run benchmark LuaJIT
+        id: benchmark-jit
+        run: echo ::set-output name=info::`luajit -- main.lua ../benchmark_master.json`
         working-directory: benchmarks/dist
       - name: Create benchmark check
         uses: actions/github-script@0.9.0
         with:
-          benchmark_info: ${{steps.benchmark.outputs.info}}
+          benchmark_info_lua: ${{steps.benchmark-lua.outputs.info}}
+          benchmark_info_jit: ${{steps.benchmark-jit.outputs.info}}
           script: |
-            const benchmarkInfo = JSON.parse(core.getInput('benchmark_info', { required: true }));
+            const benchmarkInfoLua = JSON.parse(core.getInput('benchmark_info_lua', { required: true }));
+            const benchmarkInfoJIT = JSON.parse(core.getInput('benchmark_info_jit', { required: true }));
+
+            const summary = `### Lua5.3\n${benchmarkInfoLua.summary}\n### LuaJIT\n${benchmarkInfoJIT.summary}`;
+
+            const text = `### Lua5.3\n${benchmarkInfoLua.text}\n### LuaJIT\n${benchmarkInfoJIT.text}`;
+
             github.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -47,7 +48,7 @@ jobs:
               conclusion: "neutral",
               output: {
                 title: "Benchmark results",
-                summary: benchmarkInfo.summary,
+                summary: summary,
                 text: benchmarkInfo.text
               }
             });
