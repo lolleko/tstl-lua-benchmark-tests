@@ -24,17 +24,17 @@ export function runMemoryBenchmark(benchmarkFunction: Function): MemoryBenchmark
 }
 
 export function compareMemoryBenchmarks(oldResults: MemoryBenchmarkResult[], updatedResults: MemoryBenchmarkResult[]): [string, string] {
-    let comparisonTable = "| name | master (kb) | commit (kb) | change (%) |\n| - | - | - | - |\n";
+    let comparisonTable = "| name | master (kb) | commit (kb) | change (kb) | change (%) |\n| - | - | - | - |\n";
 
     // we group by the new results in case benchmarks have been added
     updatedResults.forEach(newResult => {
-        const master = oldResults.find(r => r.benchmarkName == newResult.benchmarkName);
-        if (master) {
-            const percentageChange = newResult.memoryUsedForExec / master.memoryUsedForExec * 100 - 100;
-            comparisonTable += `| ${newResult.benchmarkName} | ${round(master.memoryUsedForExec, 3)} | ${round(newResult.memoryUsedForExec, 3)} | ${round(percentageChange, 2)} |\n`;
+        const masterResult = oldResults.find(r => r.benchmarkName == newResult.benchmarkName);
+        if (masterResult) {
+            const percentageChange = newResult.memoryUsedForExec / masterResult.memoryUsedForExec * 100 - 100;
+            comparisonTable += `| ${newResult.benchmarkName} | ${round(masterResult.memoryUsedForExec, 3)} | ${round(newResult.memoryUsedForExec, 3)} | ${round(newResult.memoryUsedForExec - masterResult.memoryUsedForExec, 3)} | ${round(percentageChange, 2)} |\n`;
         } else {
             // No master found => new benchmark
-            comparisonTable += `| ${newResult.benchmarkName}(new) | / | ${round(newResult.memoryUsedForExec, 3)} | / |\n`;
+            comparisonTable += `| ${newResult.benchmarkName}(new) | / | ${round(newResult.memoryUsedForExec, 3)} | /  | / |\n`;
         }
     });
 
