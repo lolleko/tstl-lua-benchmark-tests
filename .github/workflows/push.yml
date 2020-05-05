@@ -28,14 +28,14 @@ jobs:
         working-directory: benchmarks
       - name: Run benchmark Lua 5.3
         id: benchmark-lua
-        run: echo ::set-output name=info::`lua5.3 -- main.lua ../data/benchmark_master_53.json ${{gihub.ref}}`
+        run: echo ::set-output name=info::`lua5.3 -- main.lua ../data/benchmark_master_53.json ${{github.ref}}`
         working-directory: benchmarks/dist
       - name: Build benchmark LuaJIT
         run: npx typescript-to-lua -p tsconfig.jit.json
         working-directory: benchmarks
       - name: Run benchmark LuaJIT
         id: benchmark-jit
-        run: echo ::set-output name=info::`luajit -- main.lua ../data/benchmark_master_jit.json ${{gihub.ref}}`
+        run: echo ::set-output name=info::`luajit -- main.lua ../data/benchmark_master_jit.json ${{github.ref}}`
         working-directory: benchmarks/dist
       - name: Create benchmark check
         uses: actions/github-script@0.9.0
