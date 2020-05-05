@@ -22,7 +22,7 @@ export function memoryBenchmark(f: Function): MemoryBenchmarkResult {
     return result;
 }
 
-export function compareMemoryBenchmarks(oldResults: MemoryBenchmarkResult[], updatedResults: MemoryBenchmarkResult[]) {
+export function compareMemoryBenchmarks(oldResults: MemoryBenchmarkResult[], updatedResults: MemoryBenchmarkResult[]): [string, string] {
     let comparisonTable = "| name | master (kb) | commit (kb) | change (%) |\n| - | - | - | - |\n";
 
     // we group by the new results in case benchmarks have been added

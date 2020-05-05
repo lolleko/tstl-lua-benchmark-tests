@@ -14,31 +14,31 @@ jobs:
         with:
           node-version: 12.13.1
       - run: npm ci
-      # This will never result in a cache hit.
+      # This will never result in a direct cache hit.
       # Teherefore this always update the benchmark data.
       - name: Cache benchmark data
         id: cache-benchmark
         uses: actions/cache@v1
         with:
-          path: ./benchmarks/data
+          path: ./benchmark/data
           key: ${{ runner.os }}-master-benchmark-${{ github.sha }}
           restore-keys: ${{ runner.os }}-master-benchmark-
       - name: Ensure benchmark data dir exists
-        run: mkdir -p ./benchmarks/data
+        run: mkdir -p ./benchmark/data
       - name: Build benchmark Lua 5.3
         run: npx typescript-to-lua -p tsconfig.53.json
-        working-directory: benchmarks
+        working-directory: benchmark
       - name: Run benchmark Lua 5.3
         id: benchmark-lua
         run: echo ::set-output name=info::`lua5.3 -- run.lua ../data/benchmark_master_53.json ${{github.ref}}`
-        working-directory: benchmarks/dist
+        working-directory: benchmark/dist
       - name: Build benchmark LuaJIT
         run: npx typescript-to-lua -p tsconfig.jit.json
-        working-directory: benchmarks
+        working-directory: benchmark
       - name: Run benchmark LuaJIT
         id: benchmark-jit
         run: echo ::set-output name=info::`luajit -- run.lua ../data/benchmark_master_jit.json ${{github.ref}}`
-        working-directory: benchmarks/dist
+        working-directory: benchmark/dist
       - name: Create benchmark check
         uses: actions/github-script@0.9.0
         with:
@@ -55,7 +55,7 @@ jobs:
             github.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              name: "Benchmark results",
+              name: "benchmark results",
               head_sha: context.sha,
               status: "completed",
               conclusion: "neutral",
