@@ -14,7 +14,7 @@ function benchmarks() {
 
     const masterFileOpen = io.open(arg[0], "rb");
 
-    if (masterFileOpen) {
+    if (masterFileOpen && masterFileOpen[0]) {
         const masterFile = masterFileOpen[0] as LuaFile;
 
         let masterContent: (string | undefined)[];
