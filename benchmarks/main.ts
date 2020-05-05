@@ -61,7 +61,7 @@ function benchmarks() {
     }
 
     // Only update baseline if we are on master
-    if (string.find(arg[1], "master")[0]) {
+    if (arg[1] && string.find(arg[1], "master")[0]) {
         const newMasterFile = io.open(arg[0], "w+")[0] as LuaFile
         newMasterFile.write(json.encode(newResults));
     }
