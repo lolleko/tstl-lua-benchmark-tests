@@ -60,8 +60,6 @@ function benchmarks() {
         }
     }
 
-    io.
-
     const newMasterFile = io.open(arg[0], "w+")[0] as LuaFile
     newMasterFile.write(json.encode(newResults));
 }
