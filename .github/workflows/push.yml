@@ -18,7 +18,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ./benchmarks/data
-          key: ${{ runner.os }}-master-benchmark-github.ref
+          key: ${{ runner.os }}-master-benchmark-${{ github.ref }}
       - name: Save Original Benchmark
         # only save if pull request
         # this is required so we only cache the new benchmark data if we are on master
