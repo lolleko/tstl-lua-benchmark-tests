@@ -14,11 +14,16 @@ jobs:
         with:
           node-version: 12.13.1
       - run: npm ci
-      - name: Download previous benchmark data
+      - name: Cache benchmark data
         uses: actions/cache@v1
         with:
           path: ./benchmarks/data
-          key: ${{ runner.os }}-benchmark
+          key: ${{ runner.os }}-master-benchmark
+          restore-keys: ${{ runner.os }}-master-benchmark
+      - name: Save Original Benchmark
+        # only save if pull request
+        if: ${{ github.base_ref }}
+        run: cp -r ./benchmarks/data .bencharks/data_original && ls
       - name: Build benchmark Lua 5.3
         run: npx typescript-to-lua -p tsconfig.53.json
         working-directory: benchmarks
@@ -33,6 +38,10 @@ jobs:
         id: benchmark-jit
         run: echo ::set-output name=info::`luajit -- main.lua ../data/benchmark_master_jit.json`
         working-directory: benchmarks/dist
+      - name: Restore original benchmark data
+        # only restore if pull request
+        if: ${{ github.base_ref }}
+        run: rm -r ./benchmarks/data && mv -r ./benchmarks/data_original .bencharks/data && ls
       - name: Create benchmark check
         uses: actions/github-script@0.9.0
         with:

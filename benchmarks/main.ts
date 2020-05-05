@@ -10,6 +10,8 @@ declare var arg: any[];
 const memoryBenchmarkFunctions = [binaryTreeBenchmark, nBodyBenchmark];
 
 function benchmarks() {
+    const newResults = memoryBenchmarkFunctions.map(memoryBench);
+
     const masterFile = io.open(arg[0], "rb")[0] as LuaFile;
     let masterContent: (string | undefined)[];
     if (_VERSION == "Lua 5.3") {
@@ -23,8 +25,6 @@ function benchmarks() {
 
     if (masterContent[0]) {
         const masterResult = json.decode(masterContent[0]) as BenchmarkResult[];
-
-        const newResults = memoryBenchmarkFunctions.map(memoryBench);
 
         const memoryMasterResult = masterResult.filter(isMemoryBenchmarkResult);
         const memoryNewResult = newResults.filter(isMemoryBenchmarkResult);
@@ -55,10 +55,13 @@ ${json.encode(memoryNewResult)}`;
 
         const jsonInfo = json.encode({ summary: markdownSummary, text: markdownText });
         print(jsonInfo);
-
-        const newMasterFile = io.open(arg[0], "w+")[0] as LuaFile
-        newMasterFile.write(json.encode(newResults));
+    } else {
+        // No master just write the current results an empty info
+        print(json.encode({ summary: "New benchmark: no results yet", text: "" }))
     }
+
+    const newMasterFile = io.open(arg[0], "w+")[0] as LuaFile
+    newMasterFile.write(json.encode(newResults));
 }
 
 benchmarks();
