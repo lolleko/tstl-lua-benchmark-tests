@@ -12,52 +12,52 @@ const memoryBenchmarkFunctions = [binaryTreeBenchmark, nBodyBenchmark];
 function benchmarks() {
     const newResults = memoryBenchmarkFunctions.map(memoryBench);
 
-    const masterFile = io.open(arg[0], "rb")[0] as LuaFile;
-    let masterContent: (string | undefined)[];
-    if (_VERSION == "Lua 5.3") {
-        // @ts-ignore
-        masterContent = masterFile.read("a");
-    } else {
-        // @ts-ignore
-        masterContent = masterFile.read("*a");
-    }
-    masterFile.close();
+    const masterFileOpen = io.open(arg[0], "rb");
 
-    if (masterContent[0]) {
-        const masterResult = json.decode(masterContent[0]) as BenchmarkResult[];
+    if (masterFileOpen) {
+        const masterFile = masterFileOpen[0] as LuaFile;
 
-        const memoryMasterResult = masterResult.filter(isMemoryBenchmarkResult);
-        const memoryNewResult = newResults.filter(isMemoryBenchmarkResult);
+        let masterContent: (string | undefined)[];
+        if (_VERSION == "Lua 5.3") {
+            // @ts-ignore
+            masterContent = masterFile.read("a");
+        } else {
+            // @ts-ignore
+            masterContent = masterFile.read("*a");
+        }
+        masterFile.close();
 
-        let comparisonTable = "| name | master (kb) | commit (kb) | change (%) |\n|-|-|-|-|\n";
+        if (masterContent[0]) {
+            const masterResult = json.decode(masterContent[0]) as BenchmarkResult[];
 
-        // we iterate by the new benchmark in case benchmarks have been added
-        memoryNewResult.forEach(newResult => {
-            const master = memoryMasterResult.find(r => r.benchmarkName == newResult.benchmarkName);
-            if (master) {
-                const percentageChange = 100 - master.memoryUsedForExec / newResult.memoryUsedForExec * 100;
-                comparisonTable += `| ${newResult.benchmarkName} | ${master.memoryUsedForExec} | ${newResult.memoryUsedForExec} | ${percentageChange} |\n`;
-            } else {
-                // No master found => new benchmark
-                comparisonTable += `| ${newResult.benchmarkName}(new) | / | / | / |\n`;
-            }
-        });
+            const memoryMasterResult = masterResult.filter(isMemoryBenchmarkResult);
+            const memoryNewResult = newResults.filter(isMemoryBenchmarkResult);
 
-        const markdownSummary =
-            `**Memory:**
-${comparisonTable}`;
+            let comparisonTable = "| name | master (kb) | commit (kb) | change (%) |\n|-|-|-|-|\n";
 
-        const markdownText =
-            `**master:**
-${json.encode(memoryMasterResult)}
-**commit:**
-${json.encode(memoryNewResult)}`;
+            // we iterate by the new benchmark in case benchmarks have been added
+            memoryNewResult.forEach(newResult => {
+                const master = memoryMasterResult.find(r => r.benchmarkName == newResult.benchmarkName);
+                if (master) {
+                    const percentageChange = 100 - master.memoryUsedForExec / newResult.memoryUsedForExec * 100;
+                    comparisonTable += `| ${newResult.benchmarkName} | ${master.memoryUsedForExec} | ${newResult.memoryUsedForExec} | ${percentageChange} |\n`;
+                } else {
+                    // No master found => new benchmark
+                    comparisonTable += `| ${newResult.benchmarkName}(new) | / | / | / |\n`;
+                }
+            });
 
-        const jsonInfo = json.encode({ summary: markdownSummary, text: markdownText });
-        print(jsonInfo);
-    } else {
-        // No master just write the current results an empty info
-        print(json.encode({ summary: "New benchmark: no results yet", text: "" }))
+            const markdownSummary = `**Memory:**\n${comparisonTable}`;
+
+            const markdownText =
+                `**master:**\n${json.encode(memoryMasterResult)}\n**commit:**\n${json.encode(memoryNewResult)}`;
+
+            const jsonInfo = json.encode({ summary: markdownSummary, text: markdownText });
+            print(jsonInfo);
+        } else {
+            // No master just write the current results an empty info
+            print(json.encode({ summary: "New benchmark: no results yet", text: "" }))
+        }
     }
 
     const newMasterFile = io.open(arg[0], "w+")[0] as LuaFile
