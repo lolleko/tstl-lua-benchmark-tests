@@ -24,7 +24,7 @@ export function runMemoryBenchmark(benchmarkFunction: Function): MemoryBenchmark
 }
 
 export function compareMemoryBenchmarks(oldResults: MemoryBenchmarkResult[], updatedResults: MemoryBenchmarkResult[]): [string, string] {
-    let comparisonTable = "| name | master (kb) | commit (kb) | change (kb) | change (%) |\n| - | - | - | - |\n";
+    let comparisonTable = "| name | master (kb) | commit (kb) | change (kb) | change (%) |\n| - | - | - | - | - |\n";
 
     // we group by the new results in case benchmarks have been added
     updatedResults.forEach(newResult => {
