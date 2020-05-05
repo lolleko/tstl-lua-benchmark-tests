@@ -1,4 +1,4 @@
-import { memoryBenchmark, compareMemoryBenchmarks } from "./memory_benchmark";
+import { runMemoryBenchmark, compareMemoryBenchmarks } from "./memory_benchmark";
 import { isMemoryBenchmarkResult, BenchmarkResult } from "./benchmark_types";
 import detectCyleBenchmark from "./memory_benchmarks/graph_cylce";
 import { json } from "./util";
@@ -17,7 +17,7 @@ function benchmark() {
         detectCyleBenchmark
     ];
 
-    const memoryUpdatedResults = memoryBenchmarkInput.map(memoryBenchmark);
+    const memoryUpdatedResults = memoryBenchmarkInput.map(runMemoryBenchmark);
 
     // run future benchmarks types here
 
