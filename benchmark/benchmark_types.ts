@@ -15,6 +15,11 @@ export interface MemoryBenchmarkResult extends BenchmarkResult {
     memoryAfterGC: number,
 }
 
+export interface MemoryBenchmarkInput {
+    fn: (n: number) => void;
+    n: number;
+}
+
 export function isMemoryBenchmarkResult(result: BenchmarkResult): result is MemoryBenchmarkResult {
     return result.kind == BenchmarkKind.Memory;
 }

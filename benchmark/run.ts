@@ -1,21 +1,20 @@
 import { memoryBenchmark, compareMemoryBenchmarks } from "./memory_benchmark";
 import { binaryTreeBenchmark } from "./binary_tree";
-import { nBodyBenchmark } from "./n_body";
-import { isMemoryBenchmarkResult, BenchmarkResult, json } from "./benchmark_types";
+import { isMemoryBenchmarkResult, BenchmarkResult, json, MemoryBenchmarkInput } from "./benchmark_types";
 
 // CLI arguments
 // arg[0]: path to baseline benchmark data (required because this is also the output path)
 // arg[1]: branchname (optional)
 declare var arg: any[];
 
-const memoryBenchmarkFunctions = [binaryTreeBenchmark, nBodyBenchmark];
+const memoryBenchmarkInput: MemoryBenchmarkInput[] = [{ fn: binaryTreeBenchmark, n: 12 }];
 
 function benchmark() {
     // Benchnmarks need to run first since we always want to output a new baseline
     // even if there was no previous one
 
     // Memory tests
-    const memoryUpdatedResults = memoryBenchmarkFunctions.map(memoryBenchmark);
+    const memoryUpdatedResults = memoryBenchmarkInput.map(memoryBenchmark);
     // run future benchmarks here
 
     const updatedResults = [...memoryUpdatedResults];

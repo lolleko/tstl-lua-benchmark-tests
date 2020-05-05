@@ -6,8 +6,8 @@
    converted by Isaac Gouy
 */
 
-export function binaryTreeBenchmark() {
-    const maxDepth = 14;
+export function binaryTreeBenchmark(n: number) {
+    const maxDepth = n;
 
     const stretchDepth = maxDepth + 1;
     const check = itemCheck(bottomUpTree(stretchDepth));
