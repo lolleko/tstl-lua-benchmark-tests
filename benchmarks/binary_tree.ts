@@ -7,7 +7,7 @@
 */
 
 export function binaryTreeBenchmark() {
-    const maxDepth = 16;
+    const maxDepth = 18;
 
     const stretchDepth = maxDepth + 1;
     const check = itemCheck(bottomUpTree(stretchDepth));
