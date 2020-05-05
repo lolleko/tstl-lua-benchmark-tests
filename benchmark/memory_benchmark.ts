@@ -1,4 +1,5 @@
 import { BenchmarkKind, MemoryBenchmarkResult, json } from "./benchmark_types";
+import { round } from "./util";
 
 
 export function memoryBenchmark(benchmarkFunction: Function): MemoryBenchmarkResult {
@@ -30,10 +31,10 @@ export function compareMemoryBenchmarks(oldResults: MemoryBenchmarkResult[], upd
         const master = oldResults.find(r => r.benchmarkName == newResult.benchmarkName);
         if (master) {
             const percentageChange = newResult.memoryUsedForExec / master.memoryUsedForExec * 100 - 100;
-            comparisonTable += `| ${newResult.benchmarkName} | ${master.memoryUsedForExec} | ${newResult.memoryUsedForExec} | ${percentageChange} |\n`;
+            comparisonTable += `| ${newResult.benchmarkName} | ${round(master.memoryUsedForExec, 3)} | ${round(newResult.memoryUsedForExec, 3)} | ${round(percentageChange, 2)} |\n`;
         } else {
             // No master found => new benchmark
-            comparisonTable += `| ${newResult.benchmarkName}(new) | / | ${newResult.memoryUsedForExec} | / |\n`;
+            comparisonTable += `| ${newResult.benchmarkName}(new) | / | ${round(newResult.memoryUsedForExec, 3)} | / |\n`;
         }
     });
 
